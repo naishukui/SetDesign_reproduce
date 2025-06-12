@@ -1,0 +1,16 @@
+#BSUB -J snpC[1-3]
+#BSUB -W 3:00
+#BSUB -o /rsrch6/home/biostatistics/nkui/simu/ck.out
+#BSUB -e /rsrch6/home/biostatistics/nkui/simu/ck2.err
+#BSUB -cwd /rsrch6/home/biostatistics/nkui/simu/
+#BSUB -q e80short
+#BSUB -u nkui@mdanderson.org
+#BSUB -n 25
+#BSUB -M 10
+#BSUB -R rusage[mem=10]
+#BSUB -B
+#BSUB -N
+module load R/4.2
+echo "${LSB_JOBINDEX}"
+echo $HOSTNAME
+Rscript  snpC.R  ${LSB_JOBINDEX}
