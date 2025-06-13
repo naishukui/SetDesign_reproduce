@@ -17,7 +17,7 @@ Key parameters for these scripts:
 - `rho`: Correlation coefficient between SNPs.\
 - `list1`: Vector of genetic effect sizes for the first alternative allele.\
 - `list2`: Vector of genetic effect sizes for the second alternative allele.\
-- 
+ 
 ### Step 2
 
 Run `results.R` to:
