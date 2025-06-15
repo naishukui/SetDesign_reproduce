@@ -1,7 +1,7 @@
 #BSUB -J snpC[1-3]
 #BSUB -W 3:00
 #BSUB -o /rsrch6/home/biostatistics/nkui/simu/ck.out
-#BSUB -e /rsrch6/home/biostatistics/nkui/simu/ck2.err
+#BSUB -e /rsrch6/home/biostatistics/nkui/simu/ck.err
 #BSUB -cwd /rsrch6/home/biostatistics/nkui/simu/
 #BSUB -q e80short
 #BSUB -u nkui@mdanderson.org
