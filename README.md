@@ -6,17 +6,17 @@ Please first install the SetDesign package, for example through the command devt
 
 Submit batch jobs(bsub <simu.lsf) for the following scripts to generate simulation results for both simulated and anlytical power:
 
-- `snpC.R`: Linear outcomes without correlation.\
-- `snpCcor.R`: Linear outcomes with correlation.\
-- `snpD.R`: Binary outcomes without correlation.\
-- `snpDcor.R`: Binary outcomes with correlation.\
+- `snpC.R`: Linear outcomes without correlation.
+- `snpCcor.R`: Linear outcomes with correlation.
+- `snpD.R`: Binary outcomes without correlation.
+- `snpDcor.R`: Binary outcomes with correlation.
 
 Key parameters for these scripts:
-- `n`: Total number of subjects.\
-- `k`: Total number of SNPs.\
-- `rho`: Correlation coefficient between SNPs.\
-- `list1`: Vector of genetic effect sizes for the first alternative allele in tri-allelic position.\
-- `list2`: Vector of genetic effect sizes for the second alternative allele in tri-allelic position.\
+- `n`: Total number of subjects.
+- `k`: Total number of SNPs.
+- `rho`: Correlation coefficient between SNPs.
+- `list1`: Vector of genetic effect sizes for the first alternative allele in tri-allelic position.
+- `list2`: Vector of genetic effect sizes for the second alternative allele in tri-allelic position.
  
 ### Step 2
 
