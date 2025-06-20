@@ -49,7 +49,6 @@ beta2list2<-c( rep(0.5,5),rep(0.4,5),rep(0.3,5),rep(0.2,5),rep(0.1,5))
 ## Continuous outcome, 50 uncorrelated SNPs, MAF=0.01, 0.1<=$\beta$<=0.9
 ```{r linear_0.01_uncor,echo=FALSE,warning=FALSE}
 
-# --- Calculation code remains the same ---
 powerDerived<-powerC_derive(k=50,n=2000,alpha=0.05,p=0.01,list1=beta1list1,list2=beta2list1)
 result<-get(load("/path/to/snpC_1.Rdata"))
 
@@ -96,7 +95,6 @@ fig1_panels <- ggarrange(plotlist = plots1, ncol = 4, nrow = 1, labels = c("A", 
 ## Continuous outcome, 50 correlated SNPs,MAF=0.05, rho=0.15, 0.1<=<span class="math-inline">\\beta</span><=0.5
 ```{r linear_0.05_cor,echo=FALSE, warning=FALSE,cache=FALSE}
 
-# --- Calculation code remains the same ---
 powerDerived<-powerC_deriveCor(k=50,n=2000,alpha=0.05,p=0.05, rho=0.15,list1=beta1list2,list2=beta2list2)
 result<-get(load("/path/to/snpCcor_1.Rdata"))
 
@@ -143,7 +141,6 @@ fig2_panels <- ggarrange(plotlist = plots2, ncol = 4, nrow = 1, labels = c("E", 
 ## Binary outcome, 50 uncorrelated SNPs, MAF=0.01, 0.1<=$\beta$<=0.9
 ```{r logistic_0.01_uncor,echo=FALSE,warning=FALSE,cache=TRUE}
 
-# --- Calculation code remains the same ---
 powerDerived<-powerD_derive(kk=50,n=2000,alpha=0.05,p=0.01,list1=beta1list1,list2=beta2list1)
 result<-get(load("/path/to/snpD_1.Rdata"))
 powerE2 <- sapply(result, function(x) x$powerE2)
@@ -189,13 +186,7 @@ fig3_panels <- ggarrange(plotlist = plots3, ncol = 4, nrow = 1, labels = c("A", 
 ## Binary outcome, 50 correlated SNPs,MAF=0.05, rho=0.15, 0.1<=<span class="math-inline">\\beta</span><=0.9
 ```{r logistic_0.05_cor,echo=FALSE, cache=FALSE, warning=FALSE}
 
-# --- Calculation code remains the same ---
-#powerDerived<-powerD_deriveCor(kk=50,n=2000,alpha=0.05,p=0.05, rho=0.15,list1=beta1list1,list2=beta2list1)
- powerDerived<-c(0.81411394, 0.74636639, 0.72838540, 0.80309541, 0.86467059,
-                  0.59477499, 0.49388130, 0.45457005, 0.55383859, 0.65478742,
-                0.39450203, 0.26881186, 0.16564075, 0.18925041, 0.26180040,
-                 0.46681149, 0.30707499, 0.13014782, 0.06845541, 0.07898002,
-                 0.57999967, 0.41084567, 0.18412141, 0.07220962, 0.05257711)
+powerDerived<-powerD_deriveCor(kk=50,n=2000,alpha=0.05,p=0.05, rho=0.15,list1=beta1list1,list2=beta2list1)
 result<-get(load("/path/to/snpDcor_1.Rdata"))
 powerE2 <- sapply(result, function(x) x$powerE2)
 powerCombined <- sapply(result, function(x) x$powerCombined)
