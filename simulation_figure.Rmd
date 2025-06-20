@@ -1,0 +1,294 @@
+---
+title: "simulation_figure"
+output: html_document
+---
+
+```{r setup, include=FALSE,cache=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(SKAT)
+library(bindata)
+library(ggplot2)
+library(cowplot)
+library(gridExtra)
+library(expm)
+library(KATSP)
+library(ggpubr)
+library(grid)
+library(mvtnorm)
+library(SetDesign)
+
+theme_set(theme_cowplot())
+mytheme = list(
+  theme_classic()+
+    theme(panel.background = element_blank(),strip.background = element_rect(colour=NA, fill=NA),panel.border = element_rect(fill = NA, color = "black"),
+          legend.position="none", )
+)
+
+
+
+beta1list1<-c(-0.9,-0.75,-0.5,-0.25,-0.1, 
+             -0.9,-0.75,-0.5,-0.25,-0.1,
+             -0.9,-0.75,-0.5,-0.25,-0.1,
+             -0.9,-0.75,-0.5,-0.25,-0.1,
+             -0.9,-0.75,-0.5,-0.25,-0.1)
+beta2list1<-c( rep(0.9,5),rep(0.75,5),rep(0.5,5),rep(0.25,5),rep(0.1,5))
+
+beta1list2<-c(-0.5,-0.4,-0.3,-0.2,-0.1, 
+             -0.5,-0.4,-0.3,-0.2,-0.1,
+             -0.5,-0.4,-0.3,-0.2,-0.1,
+             -0.5,-0.4,-0.3,-0.2,-0.1,
+             -0.5,-0.4,-0.3,-0.2,-0.1)
+beta2list2<-c( rep(0.5,5),rep(0.4,5),rep(0.3,5),rep(0.2,5),rep(0.1,5))
+
+
+
+
+
+```
+
+## Continuous outcome, 50 uncorrelated SNPs, MAF=0.01, 0.1<=$\beta$<=0.9
+```{r linear_0.01_uncor,echo=FALSE,warning=FALSE}
+
+# --- Calculation code remains the same ---
+powerDerived<-powerC_derive(k=50,n=2000,alpha=0.05,p=0.01,list1=beta1list1,list2=beta2list1)
+#result<-get(load("//Users/nkui/Library/CloudStorage/OneDrive-InsideMDAnderson(2)/SKATsimulation/output/snpC_1.Rdata"))
+result<-get(load("//Users/nkui/Library/CloudStorage/OneDrive-InsideMDAnderson(2)/SKATsimulation/output/new/snpC_1000_1.Rdata"))
+
+powerE2 <- sapply(result, function(x) x$powerE2)
+powerCombined <- sapply(result, function(x) x$powerCombined)
+powerSeparated <- sapply(result, function(x) x$powerSeparated)
+
+df<-as.data.frame(cbind(as.vector(beta1list1),as.vector(beta2list1),powerSeparated,powerCombined,powerDerived,powerE2))
+colnames(df)<-c("beta1","beta2","power1","power2","power3","power4")
+power1<-cbind(df[,1:3],rep("Sim,True",25))
+power2<-cbind(df[,c(1,2,4)],rep("Sim,Mis",25))
+power3<-cbind(df[,c(1,2,5)],rep("Analytic,True",25))
+power4<-cbind(df[,c(1,2,6)],rep("Analytic,Mis",25))
+colnames(power1)[3:4]<-c("power","group")
+colnames(power2)[3:4]<-c("power","group")
+colnames(power3)[3:4]<-c("power","group")
+colnames(power4)[3:4]<-c("power","group")
+dfnew1 <- rbind(power1, power2, power3, power4) # Use dfnew1 to avoid name clash later
+
+beta2<-as.vector(c(0.1,0.25,0.5,0.75))
+dfsub<-list()
+plots1 <- list() # Store plots in a list
+line_types <- c("solid", "solid", "dashed", "dashed")
+
+for (i in 1:4){
+  dfsub[[i]] <- dfnew1[dfnew1$beta2==beta2[i], ]
+  plots1[[i]] <- ggplot(dfsub[[i]], aes(x = beta1, y = power, group=group)) +
+          geom_point(aes(color=group,shape=group)) +
+          geom_line(aes(color=group,linetype=group)) +
+          scale_linetype_manual(values = line_types) +
+          labs(title = bquote(beta[50] == .(beta2[i])),
+               x = bquote("\u03B2"[49]),
+               y = "Power",
+               color = "", shape = "", linetype = "") +
+          mytheme +
+         scale_y_continuous(limits = c(0, 1))}
+
+# Combine the 4 panels for Figure 1 with labels a, b, c, d
+fig1_panels <- ggarrange(plotlist = plots1, ncol = 4, nrow = 1, labels = c("A", "B", "C", "D"))
+
+
+```
+
+## Continuous outcome, 50 correlated SNPs,MAF=0.05, rho=0.15, 0.1<=<span class="math-inline">\\beta</span><=0.5
+```{r linear_0.05_cor,echo=FALSE, warning=FALSE,cache=FALSE}
+
+# --- Calculation code remains the same ---
+powerDerived<-powerC_deriveCor(k=50,n=2000,alpha=0.05,p=0.05, rho=0.15,list1=beta1list2,list2=beta2list2)
+result<-get(load("/Users/nkui/Library/CloudStorage/OneDrive-InsideMDAnderson(2)/SKATsimulation/output/new/snpCcor_1000_1.Rdata"))
+
+powerE2 <- sapply(result, function(x) x$powerE2)
+powerCombined <- sapply(result, function(x) x$powerCombined)
+powerSeparated <- sapply(result, function(x) x$powerSeparated)
+
+df<-as.data.frame(cbind(as.vector(beta1list11),as.vector(beta2list11),powerSeparated,powerCombined,powerDerived,powerE2))
+colnames(df)<-c("beta1","beta2","power1","power2","power3","power4")
+power1<-cbind(df[,1:3],rep("Sim,True",25))
+power2<-cbind(df[,c(1,2,4)],rep("Sim,Mis",25))
+power3<-cbind(df[,c(1,2,5)],rep("Analytic,True",25))
+power4<-cbind(df[,c(1,2,6)],rep("Analytic,Mis",25))
+colnames(power1)[3:4]<-c("power","group")
+colnames(power2)[3:4]<-c("power","group")
+colnames(power3)[3:4]<-c("power","group")
+colnames(power4)[3:4]<-c("power","group")
+dfnew2 <- rbind(power1, power2, power3, power4) # Use dfnew2
+
+beta2<-as.vector(c(0.1,0.2,0.3,0.4))
+dfsub<-list()
+plots2 <- list() # Store plots in a list
+line_types <- c("solid", "solid", "dashed", "dashed")
+
+for (i in 1:4){
+  dfsub[[i]] <- dfnew2[dfnew2$beta2==beta2[i], ]
+  plots2[[i]] <- ggplot(dfsub[[i]], aes(x = beta1, y = power, group=group)) +
+          geom_point(aes(color=group,shape=group)) +
+          geom_line(aes(color=group,linetype=group)) +
+          scale_linetype_manual(values = line_types) +
+          labs(title = bquote(beta[50] == .(beta2[i])),
+               x = bquote("\u03B2"[49]),
+               y = "Power",
+               color = "", shape = "", linetype = "") +
+          mytheme +
+         scale_y_continuous(limits = c(0, 1))}
+
+# Combine the 4 panels for Figure 2 with labels e, f, g, h
+fig2_panels <- ggarrange(plotlist = plots2, ncol = 4, nrow = 1, labels = c("E", "F", "G", "H"))
+
+
+```
+
+## Binary outcome, 50 uncorrelated SNPs, MAF=0.01, 0.1<=$\beta$<=0.9
+```{r logistic_0.01_uncor,echo=FALSE,warning=FALSE,cache=TRUE}
+
+# --- Calculation code remains the same ---
+powerDerived<-powerD_derive(kk=50,n=2000,alpha=0.05,p=0.01,list1=beta1list1,list2=beta2list1)
+result<-get(load("//Users/nkui/Library/CloudStorage/OneDrive-InsideMDAnderson(2)/SKATsimulation/output/new/snpD_10000_1.Rdata"))
+powerE2 <- sapply(result, function(x) x$powerE2)
+powerCombined <- sapply(result, function(x) x$powerCombined)
+powerSeparated <- sapply(result, function(x) x$powerSeparated)
+
+df<-as.data.frame(cbind(as.vector(beta1list1),as.vector(beta2list1),powerSeparated,powerCombined,powerDerived,powerE2))
+colnames(df)<-c("beta1","beta2","power1","power2","power3","power4")
+power1<-cbind(df[,1:3],rep("Sim,True",25))
+power2<-cbind(df[,c(1,2,4)],rep("Sim,Mis",25))
+power3<-cbind(df[,c(1,2,5)],rep("Analytic,True",25))
+power4<-cbind(df[,c(1,2,6)],rep("Analytic,Mis",25))
+colnames(power1)[3:4]<-c("power","group")
+colnames(power2)[3:4]<-c("power","group")
+colnames(power3)[3:4]<-c("power","group")
+colnames(power4)[3:4]<-c("power","group")
+dfnew3 <- rbind(power1, power2, power3, power4) # Use dfnew3
+
+beta2<-as.vector(c(0.1,0.25,0.5,0.75))
+dfsub<-list()
+plots3 <- list() # Store plots in a list
+line_types <- c("solid", "solid", "dashed", "dashed")
+for (i in 1:4){
+  dfsub[[i]] <- dfnew3[dfnew3$beta2==beta2[i], ]
+  plots3[[i]] <- ggplot(dfsub[[i]], aes(x = beta1, y = power, group=group)) +
+          geom_point(aes(color=group,shape=group)) +
+          geom_line(aes(color=group,linetype=group)) +
+          scale_linetype_manual(values = line_types) +
+          labs(title = bquote(beta[50] == .(beta2[i])),
+               x = bquote("\u03B2"[49]),
+               y = "Power",
+               color = "", shape = "", linetype = "") +
+          mytheme +
+         scale_y_continuous(limits = c(0, 0.6))
+}
+
+# Combine the 4 panels for Figure 3 with labels a, b, c, d
+fig3_panels <- ggarrange(plotlist = plots3, ncol = 4, nrow = 1, labels = c("A", "B", "C", "D"))
+
+
+```
+
+## Binary outcome, 50 correlated SNPs,MAF=0.05, rho=0.15, 0.1<=<span class="math-inline">\\beta</span><=0.9
+```{r logistic_0.05_cor,echo=FALSE, cache=FALSE, warning=FALSE}
+
+# --- Calculation code remains the same ---
+#powerDerived<-powerD_deriveCor(kk=50,n=2000,alpha=0.05,p=0.05, rho=0.15,list1=beta1list1,list2=beta2list1)
+ powerDerived<-c(0.81411394, 0.74636639, 0.72838540, 0.80309541, 0.86467059,
+                  0.59477499, 0.49388130, 0.45457005, 0.55383859, 0.65478742,
+                0.39450203, 0.26881186, 0.16564075, 0.18925041, 0.26180040,
+                 0.46681149, 0.30707499, 0.13014782, 0.06845541, 0.07898002,
+                 0.57999967, 0.41084567, 0.18412141, 0.07220962, 0.05257711)
+result<-get(load("//Users/nkui/Library/CloudStorage/OneDrive-InsideMDAnderson(2)/SKATsimulation/output/new/snpDcor_1.Rdata"))
+powerE2 <- sapply(result, function(x) x$powerE2)
+powerCombined <- sapply(result, function(x) x$powerCombined)
+powerSeparated <- sapply(result, function(x) x$powerSeparated)
+
+df<-as.data.frame(cbind(as.vector(beta1list1),as.vector(beta2list1),powerSeparated,powerCombined,powerDerived,powerE2))
+colnames(df)<-c("beta1","beta2","power1","power2","power3","power4")
+power1<-cbind(df[,1:3],rep("Sim,True",25))
+power2<-cbind(df[,c(1,2,4)],rep("Sim,Mis",25))
+power3<-cbind(df[,c(1,2,5)],rep("Analytic,True",25))
+power4<-cbind(df[,c(1,2,6)],rep("Analytic,Mis",25))
+colnames(power1)[3:4]<-c("power","group")
+colnames(power2)[3:4]<-c("power","group")
+colnames(power3)[3:4]<-c("power","group")
+colnames(power4)[3:4]<-c("power","group")
+dfnew4 <- rbind(power1, power2, power3, power4) # Use dfnew4
+
+beta2<-as.vector(c(0.1,0.25,0.5,0.75))
+dfsub<-list()
+plots4 <- list() # Store plots in a list
+line_types <- c("solid", "solid", "dashed", "dashed")
+
+for (i in 1:4){
+  dfsub[[i]] <- dfnew4[dfnew4$beta2==beta2[i], ]
+  plots4[[i]] <- ggplot(dfsub[[i]], aes(x = beta1, y = power, group=group)) +
+          geom_point(aes(color=group,shape=group)) +
+          geom_line(aes(color=group,linetype=group)) +
+          scale_linetype_manual(values = line_types) +
+          labs(title = bquote(beta[50] == .(beta2[i])),
+               x = bquote("\u03B2"[49]),
+               y = "Power",
+               color = "", shape = "", linetype = "") +
+          mytheme +
+         scale_y_continuous(limits = c(0, 0.7))}
+
+# Combine the 4 panels for Figure 4 with labels e, f, g, h
+fig4_panels <- ggarrange(plotlist = plots4, ncol = 4, nrow = 1, labels = c("E", "F", "G", "H"))
+
+
+```
+
+## Combine Figures
+```{r combine,echo=FALSE, cache=FALSE, warning=FALSE}
+# Create a dummy plot using data from any of the chunks (e.g., dfnew1)
+# to extract the legend
+dummy_plot <- ggplot(dfnew1, aes(x = beta1, y = power,
+                                color = group,
+                                linetype = group,
+                                shape = group)) +
+  geom_point() +
+  geom_line() +
+  scale_linetype_manual(values = c("solid", "solid", "dashed", "dashed")) +
+  theme(legend.position = "bottom") +
+  labs(color = NULL, linetype = NULL, shape = NULL) # Remove legend titles
+
+# Extract the legend
+legend <- cowplot::get_legend(dummy_plot)
+
+# --- Create Final Figure 1 (Combining original Fig 1 & 2) ---
+# Arrange the panels of fig1 and fig2 vertically
+combined_fig_1_2 <- ggarrange(
+  fig1_panels, fig2_panels,
+  nrow = 2, ncol = 1
+  # No common legend here, add it below
+)
+
+# Add the shared legend to the bottom
+final_plot_1_2 <- ggarrange(
+  combined_fig_1_2, legend,
+  nrow = 2, ncol = 1,
+  heights = c(10, 1) # Adjust ratio for plot vs legend as needed
+)
+
+# Print the first final figure
+print(final_plot_1_2)
+
+
+# --- Create Final Figure 2 (Combining original Fig 3 & 4) ---
+# Arrange the panels of fig3 and fig4 vertically
+combined_fig_3_4 <- ggarrange(
+  fig3_panels, fig4_panels,
+  nrow = 2, ncol = 1
+  # No common legend here, add it below
+)
+
+# Add the shared legend to the bottom
+final_plot_3_4 <- ggarrange(
+  combined_fig_3_4, legend,
+  nrow = 2, ncol = 1,
+  heights = c(10, 1) # Adjust ratio for plot vs legend as needed
+)
+
+# Print the second final figure
+print(final_plot_3_4)
+```
