@@ -27,5 +27,5 @@ beta2list <- list(
   c(rep(3, 5), rep(2.5, 5), rep(2, 5), rep(1.5, 5), rep(1, 5))
 )
 
-result<-powerD_mean(n=2000,k=50,p=0.01,runs=100,list1=beta1list[[index]],list2=beta2list[[index]])
+result<-powerD_mean(n=2000,k=50,p=0.01,runs=1000,list1=beta1list[[index]],list2=beta2list[[index]])
 save(result,file=paste0(output_path,output_file_name,index,".Rdata"))
