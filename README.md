@@ -20,7 +20,7 @@ Key parameters for these scripts:
  
 ### Step 2
 
-Run `results.R` to:
+Run `simulation_figure.Rmd` to:
 - Calculate analytical power using the new method developed in this package.
 - Generate plots comparing the four different power calculation methods across various effect size combinations.
 
