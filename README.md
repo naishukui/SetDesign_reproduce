@@ -26,13 +26,13 @@ Run `simulation_figure.Rmd` to:
 - Generate plots comparing the four different power calculation methods across various effect size combinations.
 
 
-## Supplementay Figures
+## Supplementary Figures
 
 ### Realistic simulation using SKAT
 run `realCwT0.2.R`,`realCwT0.05.R`,`realDwT0.2.R` and `realDwT0.05.R` to simulate power using SKAT, submit job using `run_simureal.lsf`, then use `simRealDwT1k.Rmd`, `simRealDwT2k.Rmd` ...to generate figures in Supplementary Appendix J.
 
 ### Realistic simulation using MAGMA
-run `sim_magma_C.R` and `sim_magma_D.R` to prepare data, then use `magmaC.Rmd` and `magmaD.Rmd` to generate figures in Supplementary Appendix K.
+run `sim_magma_C.R` and `sim_magma_D.R` to prepare data, then use `run_magmaC.lsf` and `run_magmaD.lsf` to run MAGMA, lastly run `magmaC.Rmd` and `magmaD.Rmd` to generate figures in Supplementary Appendix K.
 
 ### Realistic simulation using SAIGE-GENE
-run `sim_SaigeC.R` and `sim_SiageD.R` to prepare data, then use `saigeC.Rmd` and `saigeD.Rmd` to generate figures in Supplementary Appendix K.
+run `sim_saigeC.R` and `sim_saigeD.R` to prepare data, then use `run_saigeC.lsf` and `run_saigeD.lsf` to run SAIGE-GENE, lastly run `saigeC.Rmd` and `saigeD.Rmd` to generate figures in Supplementary Appendix K.
