@@ -1,0 +1,48 @@
+#!/bin/bash
+
+#BSUB -J magma0.2[1-144]
+#BSUB -W 3:00
+#BSUB -o /rsrch6/home/biostatistics/nkui/magma/ck.out
+#BSUB -e /rsrch6/home/biostatistics/nkui/magma/ck.err
+#BSUB -cwd /rsrch6/home/biostatistics/nkui/magma/
+#BSUB -q short
+#BSUB -u nkui@mdanderson.org
+#BSUB -n 4
+#BSUB -M 5
+#BSUB -R rusage[mem=5]
+#BSUB -B
+#BSUB -N
+echo "${LSB_JOBINDEX}"
+echo $HOSTNAME
+
+# --- Variables ---
+JOBID=${LSB_JOBINDEX}
+BASE="/rsrch6/home/biostatistics/nkui/magma/maf0.2"
+
+SCENARIO="${BASE}/job${JOBID}"
+LOC="${BASE}"
+
+MAGMA="/rsrch6/home/biostatistics/nkui/magma/magma"
+ANNOT="0.2.genes.annot"
+
+echo "=== Running MAGMA for job ${JOBID} ==="
+echo "Scenario folder: ${SCENARIO}"
+
+# --- Loop through 100 runs ---
+for i in {1..100}; do
+#echo "Running mis_$i ..."
+#$MAGMA \
+#--bfile ${SCENARIO}/mis_${i} \
+#--gene-annot $ANNOT \
+#--out ${SCENARIO}/mis_${i}_out
+
+echo "Running true_$i ..."
+$MAGMA \
+--bfile ${SCENARIO}/true_${i} \
+--gene-annot $ANNOT \
+--out ${SCENARIO}/true_${i}_out
+done
+
+
+echo "=== Finished job ${JOBID} ==="
+
