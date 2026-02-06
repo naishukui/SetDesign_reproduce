@@ -32,7 +32,7 @@ Run `simulation_figure.Rmd` to:
 run `realCwT0.2.R`,`realCwT0.05.R`,`realDwT0.2.R` and `realDwT0.05.R` to simulate power using SKAT, submit job using `run_simureal.lsf`, then use `simRealDwT1k.Rmd`, `simRealDwT2k.Rmd` ...to generate figures in Supplementary Appendix J.
 
 ### Realistic simulation using MAGMA
-run `sim_magma_C.R` and `sim_magma_D.R` to prepare data, then use `run_magmaC.lsf` and `run_magmaD.lsf` to run MAGMA, lastly run `magmaC.Rmd` and `magmaD.Rmd` to generate figures in Supplementary Appendix K.
+run `sim_magma_C.R` and `sim_magma_D.R` to prepare genotype and phenotype data, then use `run_magmaC.lsf` and `run_magmaD.lsf` to run MAGMA, lastly run `magmaC.Rmd` and `magmaD.Rmd` to generate figures in Supplementary Appendix K.
 
 ### Realistic simulation using SAIGE-GENE
-run `sim_saigeC.R` and `sim_saigeD.R` to prepare data, then use `run_saigeC.lsf` and `run_saigeD.lsf` to run SAIGE-GENE, lastly run `saigeC.Rmd` and `saigeD.Rmd` to generate figures in Supplementary Appendix K.
+run `sim_saigeC.R` and `sim_saigeD.R` to prepare genotype and phenotype data, then use `run_saigeC.lsf` and `run_saigeD.lsf` to run SAIGE-GENE, lastly run `saigeC.Rmd` and `saigeD.Rmd` to generate figures in Supplementary Appendix K.
