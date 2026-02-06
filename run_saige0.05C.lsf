@@ -1,0 +1,101 @@
+#BSUB -J saige0.05C[1-48]
+#BSUB -W 3:00
+#BSUB -o /rsrch6/home/biostatistics/nkui/saige/ckc5.out
+#BSUB -e /rsrch6/home/biostatistics/nkui/saige/ckc5.err
+#BSUB -cwd /rsrch6/home/biostatistics/nkui/saige/
+#BSUB -q short
+#BSUB -u nkui@mdanderson.org
+#BSUB -n 4
+#BSUB -M 5
+#BSUB -R rusage[mem=5]
+#BSUB -B
+#BSUB -N
+echo "${LSB_JOBINDEX}"
+echo $HOSTNAME
+module load saige
+
+j=$LSB_JOBINDEX
+# 1. Get the Job Folder Index (1 to 144) from LSF
+#i=$LSB_JOBINDEX
+
+echo "Starting processing for Job Folder: job${j}"
+
+# 2. Loop through the two file prefixes: 'true' and 'mis'
+for prefix in true mis; do
+
+echo "  -- Starting ${prefix} files (1 to 100) --"
+
+# 3. Inner loop through the 100 file indices (1 to 100)
+for i in {1..100}; do
+ base="maf0.05C/job${j}/out_${prefix}_${i}.txt"
+    file_main="${base}"
+    file_marker="${base}.markerList.txt"
+    file_assoc="${base}.singleAssoc.txt"
+
+   if [[ -f "$file_main" && -f "$file_marker" && -f "$file_assoc" ]]; then
+        echo "    Skipping file ${i} for prefix ${prefix} (all 3 files exist)."
+        continue
+    fi
+
+MASTER_PLINK="maf0.05C/${prefix}_master"
+SPARSE_GRM="sparseGRM_true_relatednessCutoff_0.05_2000_randomMarkersUsed.sparseGRM.mtx"
+SPARSE_GRM_ID="sparseGRM_true_relatednessCutoff_0.05_2000_randomMarkersUsed.sparseGRM.mtx.sampleIDs.txt"
+
+# 2. Dynamic Phenotype and Output
+# Note: This matches the file we just made in R above
+PHENO_FILE="maf0.05C/job${j}/pheno_${i}.txt"
+OUTPUT_PREFIX="maf0.05C/job${j}/step1out_${prefix}_${i}"
+
+apptainer run -B $PWD $saige step1_fitNULLGLMM.R \
+--plinkFile=${MASTER_PLINK} \
+--useSparseGRMtoFitNULL=TRUE \
+--sparseGRMFile=${SPARSE_GRM} \
+--sparseGRMSampleIDFile=${SPARSE_GRM_ID} \
+--phenoFile=${PHENO_FILE} \
+--phenoCol=y \
+--sampleIDColinphenoFile=IID \
+--traitType=quantitative \
+--outputPrefix=${OUTPUT_PREFIX} \
+--IsOverwriteVarianceRatioFile=TRUE \
+--skipVarianceRatioEstimation=FALSE \
+--isCateVarianceRatio=FALSE \
+--relatednessCutoff=0.05 \
+--nThreads=4
+
+BED_FILE="maf0.05C/${prefix}_master.bed"
+BIM_FILE="maf0.05C/${prefix}_master.bim"
+FAM_FILE="maf0.05C/job${j}/both_${i}.fam"
+OUTPUT_FILE="maf0.05C/job${j}/out_${prefix}_${i}.txt"
+OUTPUT_FILE="maf0.05C/job${j}/out_${prefix}_${i}.txt"
+MODEL_FILE="maf0.05C/job${j}/step1out_${prefix}_${i}.rda"
+VAR_FILE="maf0.05C/job${j}/step1out_${prefix}_${i}.varianceRatio.txt"
+
+# Note: Assuming your group file name is based on the index ${i}
+GROUP_FILE="group_file.txt"
+
+echo "    Processing file: ${BED_FILE}"
+
+# 4. Run Apptainer (SAIGE Step 2)
+
+apptainer run -B $PWD $saige step2_SPAtests.R \
+--bedFile=${BED_FILE} \
+--bimFile=${BIM_FILE} \
+--famFile=${FAM_FILE} \
+--chrom=1 \
+--sparseGRMFile=${SPARSE_GRM} \
+--sparseGRMSampleIDFile=${SPARSE_GRM_ID} \
+--GMMATmodelFile=${MODEL_FILE} \
+--varianceRatioFile=${VAR_FILE} \
+--SAIGEOutputFile=${OUTPUT_FILE} \
+--groupFile=group_0.05.txt \
+--maxMAF_in_groupTest=0.5 \
+--is_output_markerList_in_groupTest=TRUE \
+--weights.beta="1,1" \
+--r.corr=0 \
+--LOCO=FALSE
+
+done
+
+done
+
+echo "Completed  file ${i} for Job Folder ${j} "
