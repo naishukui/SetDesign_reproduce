@@ -29,7 +29,7 @@ Run `simulation_figure.Rmd` to:
 ## Supplementay Figures
 
 ### Realistic simulation using SKAT
-run `realC.R` and `realD.R` to simulate power using SKAT, submit job using `run_simureal.lsf`, then use `simRealDwT1k.Rmd`, `simRealDwT2k.Rmd` ...to generate figures in Supplementary Appendix J.
+run `realCwT0.2.R`,`realCwT0.05.R`,`realDwT0.2.R` and `realDwT0.05.R` to simulate power using SKAT, submit job using `run_simureal.lsf`, then use `simRealDwT1k.Rmd`, `simRealDwT2k.Rmd` ...to generate figures in Supplementary Appendix J.
 
 ### Realistic simulation using MAGMA
 run `sim_magma_C.R` and `sim_magma_D.R` to prepare data, then use `magmaC.Rmd` and `magmaD.Rmd` to generate figures in Supplementary Appendix K.
