@@ -1,0 +1,873 @@
+---
+title: "simulation on real data- binary outcome-sample size=2k"
+output: html_document
+date: "2025-11-02"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(fig.path = "/Users/nkui/Library/CloudStorage/OneDrive-InsideMDAnderson/realSIM/CODE/")#, fig.width = 6, fig.height = 8)
+
+library(dplyr)
+
+setwd("/Users/nkui/Library/CloudStorage/OneDrive-InsideMDAnderson/realSIM/OUTPUT/")
+df1<-get(load("realDwT0.2_2k.Rdata"))
+df2<-get(load("realDwT0.05_2k.Rdata"))
+
+
+#------------------PLOT------------------------#
+library(ggplot2)
+library(cowplot)
+library(gridExtra)
+library(KATSP)
+library(ggpubr)
+library(grid)
+
+es1<-as.vector(c(0.1,0.25,0.5,0.75))
+es2<-as.vector(c(-0.1,-0.25,-0.5,-0.75))
+
+
+theme_set(theme_cowplot())
+mytheme = list(
+  theme_classic()+
+    theme(panel.background = element_blank(),strip.background = element_rect(colour=NA, fill=NA),panel.border = element_rect(fill = NA, color = "black"),
+          legend.position="none", )
+)
+
+```
+
+<!--## MAF=0.2, beta0=-1, other effect size=0-->
+
+```{r fig1_0_-1,echo=FALSE}
+df <- df1[df1$Beta0 == -1 & df1$es_other == 0,]
+power1 <- cbind(df[,c(3,4,6)],rep("Analytic,True",16))
+power2 <- cbind(df[,c(3,4,7)],rep("Analytic,Mis",16))
+power3 <- cbind(df[,c(3,4,8)],rep("Sim,True",16))
+power4 <- cbind(df[,c(3,4,9)],rep("Sim,Mis",16))
+
+colnames(power1)[3:4]<-c("power","group")
+colnames(power2)[3:4]<-c("power","group")
+colnames(power3)[3:4]<-c("power","group")
+colnames(power4)[3:4]<-c("power","group")
+
+dfnew<-rbind(power1,power2,power3,power4)
+dfsub<-list()
+line_types <- c("solid",  "solid",  "dashed", "dashed")
+
+plots1 <- list()
+for (i in 1:4){
+  dfsub[[i]] <- dfnew[dfnew$es2==es2[i], ]
+  plots1[[i]] <- ggplot(dfsub[[i]], aes(x = es1, y = power, group=group)) +
+          geom_point(aes(color=group,shape=group)) +
+          geom_line(aes(color=group,linetype=group)) +
+          scale_linetype_manual(values = line_types) +
+          labs(title = bquote(beta[50] == .(es2[i])),
+               x = bquote("\u03B2"[49]),
+               y = "Power",
+               color = "", shape = "", linetype = "") +
+          mytheme #+
+         #scale_y_continuous(limits = c(0, 0.6))
+         
+}
+
+fig1_panels <- ggarrange(plotlist = plots1, ncol = 4, nrow = 1, labels = c("A", "B", "C", "D"))
+#fig1_panels
+```
+
+<!--## MAF=0.2, beta0=0, other effect size=0-->
+
+```{r fig1_0_0,echo=FALSE}
+df <- df1[df1$Beta0 == 0 & df1$es_other == 0,]
+power1 <- cbind(df[,c(3,4,6)],rep("Analytic,True",16))
+power2 <- cbind(df[,c(3,4,7)],rep("Analytic,Mis",16))
+power3 <- cbind(df[,c(3,4,8)],rep("Sim,True",16))
+power4 <- cbind(df[,c(3,4,9)],rep("Sim,Mis",16))
+
+colnames(power1)[3:4]<-c("power","group")
+colnames(power2)[3:4]<-c("power","group")
+colnames(power3)[3:4]<-c("power","group")
+colnames(power4)[3:4]<-c("power","group")
+
+dfnew<-rbind(power1,power2,power3,power4)
+dfsub<-list()
+line_types <- c("solid",  "solid",  "dashed", "dashed")
+
+plots2 <- list()
+for (i in 1:4){
+  dfsub[[i]] <- dfnew[dfnew$es2==es2[i], ]
+  plots2[[i]] <- ggplot(dfsub[[i]], aes(x = es1, y = power, group=group)) +
+          geom_point(aes(color=group,shape=group)) +
+          geom_line(aes(color=group,linetype=group)) +
+          scale_linetype_manual(values = line_types) +
+          labs(title = bquote(beta[50] == .(es2[i])),
+               x = bquote("\u03B2"[49]),
+               y = "Power",
+               color = "", shape = "", linetype = "") +
+          mytheme #+
+         #scale_y_continuous(limits = c(0, 0.6))
+         
+}
+
+fig2_panels <- ggarrange(plotlist = plots2, ncol = 4, nrow = 1, labels = c("E", "F", "G", "H"))
+#fig2_panels
+
+```
+
+<!--## MAF=0.2, beta0=1, other effect size=0-->
+
+```{r fig1_0_1,echo=FALSE}
+df <- df1[df1$Beta0 == 1 & df1$es_other == 0,]
+power1 <- cbind(df[,c(3,4,6)],rep("Analytic,True",16))
+power2 <- cbind(df[,c(3,4,7)],rep("Analytic,Mis",16))
+power3 <- cbind(df[,c(3,4,8)],rep("Sim,True",16))
+power4 <- cbind(df[,c(3,4,9)],rep("Sim,Mis",16))
+
+colnames(power1)[3:4]<-c("power","group")
+colnames(power2)[3:4]<-c("power","group")
+colnames(power3)[3:4]<-c("power","group")
+colnames(power4)[3:4]<-c("power","group")
+
+dfnew<-rbind(power1,power2,power3,power4)
+dfsub<-list()
+line_types <- c("solid",  "solid",  "dashed", "dashed")
+
+
+plots <- list()
+for (i in 1:4){
+  dfsub[[i]] <- dfnew[dfnew$es2==es2[i], ]
+  plots[[i]] <- ggplot(dfsub[[i]], aes(x = es1, y = power, group=group)) +
+          geom_point(aes(color=group,shape=group)) +
+          geom_line(aes(color=group,linetype=group)) +
+          scale_linetype_manual(values = line_types) +
+          labs(title = bquote(beta[50] == .(es2[i])),
+               x = bquote("\u03B2"[49]),
+               y = "Power",
+               color = "", shape = "", linetype = "") +
+          mytheme #+
+         #scale_y_continuous(limits = c(0, 0.6))
+         
+}
+
+fig3_panels <- ggarrange(plotlist = plots, ncol = 4, nrow = 1, labels = c("I", "J", "K", "L"))
+#fig3_panels
+```
+
+<!--## MAF=0.2, beta0=-1, other effect size=0.1-->
+
+```{r fig1_0.1_-1,echo=FALSE}
+df <- df1[df1$Beta0 == -1 & df1$es_other == 0.1,]
+power1 <- cbind(df[,c(3,4,6)],rep("Analytic,True",16))
+power2 <- cbind(df[,c(3,4,7)],rep("Analytic,Mis",16))
+power3 <- cbind(df[,c(3,4,8)],rep("Sim,True",16))
+power4 <- cbind(df[,c(3,4,9)],rep("Sim,Mis",16))
+
+colnames(power1)[3:4]<-c("power","group")
+colnames(power2)[3:4]<-c("power","group")
+colnames(power3)[3:4]<-c("power","group")
+colnames(power4)[3:4]<-c("power","group")
+
+dfnew<-rbind(power1,power2,power3,power4)
+dfsub<-list()
+line_types <- c("solid",  "solid",  "dashed", "dashed")
+
+
+
+
+plots <- list()
+for (i in 1:4){
+  dfsub[[i]] <- dfnew[dfnew$es2==es2[i], ]
+  plots[[i]] <- ggplot(dfsub[[i]], aes(x = es1, y = power, group=group)) +
+          geom_point(aes(color=group,shape=group)) +
+          geom_line(aes(color=group,linetype=group)) +
+          scale_linetype_manual(values = line_types) +
+          labs(title = bquote(beta[50] == .(es2[i])),
+               x = bquote("\u03B2"[49]),
+               y = "Power",
+               color = "", shape = "", linetype = "") +
+          mytheme #+
+         #scale_y_continuous(limits = c(0, 0.6))
+         
+}
+
+fig4_panels <- ggarrange(plotlist = plots, ncol = 4, nrow = 1, labels = c("A", "B", "C", "D"))
+#fig4_panels
+
+
+```
+
+<!--## MAF=0.2, beta0=0, other effect size=0.1-->
+
+```{r fig1_0.1_0,echo=FALSE}
+df <- df1[df1$Beta0 == 0 & df1$es_other == 0.1,]
+power1 <- cbind(df[,c(3,4,6)],rep("Analytic,True",16))
+power2 <- cbind(df[,c(3,4,7)],rep("Analytic,Mis",16))
+power3 <- cbind(df[,c(3,4,8)],rep("Sim,True",16))
+power4 <- cbind(df[,c(3,4,9)],rep("Sim,Mis",16))
+
+colnames(power1)[3:4]<-c("power","group")
+colnames(power2)[3:4]<-c("power","group")
+colnames(power3)[3:4]<-c("power","group")
+colnames(power4)[3:4]<-c("power","group")
+
+dfnew<-rbind(power1,power2,power3,power4)
+dfsub<-list()
+line_types <- c("solid",  "solid",  "dashed", "dashed")
+plots <- list()
+for (i in 1:4){
+  dfsub[[i]] <- dfnew[dfnew$es2==es2[i], ]
+  plots[[i]] <- ggplot(dfsub[[i]], aes(x = es1, y = power, group=group)) +
+          geom_point(aes(color=group,shape=group)) +
+          geom_line(aes(color=group,linetype=group)) +
+          scale_linetype_manual(values = line_types) +
+          labs(title = bquote(beta[50] == .(es2[i])),
+               x = bquote("\u03B2"[49]),
+               y = "Power",
+               color = "", shape = "", linetype = "") +
+          mytheme #+
+         #scale_y_continuous(limits = c(0, 0.6))
+         
+}
+
+fig5_panels <- ggarrange(plotlist = plots, ncol = 4, nrow = 1, labels = c("E", "F", "G", "H"))
+#fig5_panels
+```
+
+<!--## MAF=0.2, beta0=1, other effect size=0.1-->
+
+```{r fig1_0.1_1,echo=FALSE}
+df <- df1[df1$Beta0 == 1 & df1$es_other == 0.1,]
+power1 <- cbind(df[,c(3,4,6)],rep("Analytic,True",16))
+power2 <- cbind(df[,c(3,4,7)],rep("Analytic,Mis",16))
+power3 <- cbind(df[,c(3,4,8)],rep("Sim,True",16))
+power4 <- cbind(df[,c(3,4,9)],rep("Sim,Mis",16))
+
+colnames(power1)[3:4]<-c("power","group")
+colnames(power2)[3:4]<-c("power","group")
+colnames(power3)[3:4]<-c("power","group")
+colnames(power4)[3:4]<-c("power","group")
+
+dfnew<-rbind(power1,power2,power3,power4)
+dfsub<-list()
+line_types <- c("solid",  "solid",  "dashed", "dashed")
+plots <- list()
+for (i in 1:4){
+  dfsub[[i]] <- dfnew[dfnew$es2==es2[i], ]
+  plots[[i]] <- ggplot(dfsub[[i]], aes(x = es1, y = power, group=group)) +
+          geom_point(aes(color=group,shape=group)) +
+          geom_line(aes(color=group,linetype=group)) +
+          scale_linetype_manual(values = line_types) +
+          labs(title = bquote(beta[50] == .(es2[i])),
+               x = bquote("\u03B2"[49]),
+               y = "Power",
+               color = "", shape = "", linetype = "") +
+          mytheme #+
+         #scale_y_continuous(limits = c(0, 0.6))
+         
+}
+
+fig6_panels <- ggarrange(plotlist = plots, ncol = 4, nrow = 1, labels = c("I", "J", "K", "L"))
+#fig6_panels
+```
+
+
+<!--## MAF=0.2, beta0=-1, other effect size=0.25-->
+
+```{r fig2_0.25_-1,echo=FALSE}
+df <- df1[df1$Beta0 == -1 & df1$es_other == 0.25,]
+power1 <- cbind(df[,c(3,4,6)],rep("Analytic,True",16))
+power2 <- cbind(df[,c(3,4,7)],rep("Analytic,Mis",16))
+power3 <- cbind(df[,c(3,4,8)],rep("Sim,True",16))
+power4 <- cbind(df[,c(3,4,9)],rep("Sim,Mis",16))
+
+colnames(power1)[3:4]<-c("power","group")
+colnames(power2)[3:4]<-c("power","group")
+colnames(power3)[3:4]<-c("power","group")
+colnames(power4)[3:4]<-c("power","group")
+
+dfnew<-rbind(power1,power2,power3,power4)
+dfsub<-list()
+line_types <- c("solid",  "solid",  "dashed", "dashed")
+plots <- list()
+for (i in 1:4){
+  dfsub[[i]] <- dfnew[dfnew$es2==es2[i], ]
+  plots[[i]] <- ggplot(dfsub[[i]], aes(x = es1, y = power, group=group)) +
+          geom_point(aes(color=group,shape=group)) +
+          geom_line(aes(color=group,linetype=group)) +
+          scale_linetype_manual(values = line_types) +
+          labs(title = bquote(beta[50] == .(es2[i])),
+               x = bquote("\u03B2"[49]),
+               y = "Power",
+               color = "", shape = "", linetype = "") +
+          mytheme #+
+         #scale_y_continuous(limits = c(0, 0.6))
+         
+}
+
+fig7_panels <- ggarrange(plotlist = plots, ncol = 4, nrow = 1, labels = c("A", "B", "C", "D"))
+#fig7_panels
+```
+
+<!--## MAF=0.2, beta0=0, other effect size=0.25-->
+
+```{r fig2_0.25_0,echo=FALSE}
+df <- df1[df1$Beta0 == 0 & df1$es_other == 0.25,]
+power1 <- cbind(df[,c(3,4,6)],rep("Analytic,True",16))
+power2 <- cbind(df[,c(3,4,7)],rep("Analytic,Mis",16))
+power3 <- cbind(df[,c(3,4,8)],rep("Sim,True",16))
+power4 <- cbind(df[,c(3,4,9)],rep("Sim,Mis",16))
+
+colnames(power1)[3:4]<-c("power","group")
+colnames(power2)[3:4]<-c("power","group")
+colnames(power3)[3:4]<-c("power","group")
+colnames(power4)[3:4]<-c("power","group")
+
+dfnew<-rbind(power1,power2,power3,power4)
+dfsub<-list()
+line_types <- c("solid",  "solid",  "dashed", "dashed")
+plots <- list()
+for (i in 1:4){
+  dfsub[[i]] <- dfnew[dfnew$es2==es2[i], ]
+  plots[[i]] <- ggplot(dfsub[[i]], aes(x = es1, y = power, group=group)) +
+          geom_point(aes(color=group,shape=group)) +
+          geom_line(aes(color=group,linetype=group)) +
+          scale_linetype_manual(values = line_types) +
+          labs(title = bquote(beta[50] == .(es2[i])),
+               x = bquote("\u03B2"[49]),
+               y = "Power",
+               color = "", shape = "", linetype = "") +
+          mytheme #+
+         #scale_y_continuous(limits = c(0, 0.6))
+         
+}
+
+fig8_panels <- ggarrange(plotlist = plots, ncol = 4, nrow = 1, labels = c("E", "F", "G", "H"))
+#fig8_panels
+```
+
+<!--## MAF=0.2, beta0=1, other effect size=0.25-->
+
+```{r fig2_0.25_1,echo=FALSE}
+df <- df1[df1$Beta0 == 1 & df1$es_other == 0.25,]
+power1 <- cbind(df[,c(3,4,6)],rep("Analytic,True",16))
+power2 <- cbind(df[,c(3,4,7)],rep("Analytic,Mis",16))
+power3 <- cbind(df[,c(3,4,8)],rep("Sim,True",16))
+power4 <- cbind(df[,c(3,4,9)],rep("Sim,Mis",16))
+
+colnames(power1)[3:4]<-c("power","group")
+colnames(power2)[3:4]<-c("power","group")
+colnames(power3)[3:4]<-c("power","group")
+colnames(power4)[3:4]<-c("power","group")
+
+dfnew<-rbind(power1,power2,power3,power4)
+dfsub<-list()
+line_types <- c("solid",  "solid",  "dashed", "dashed")
+plots <- list()
+for (i in 1:4){
+  dfsub[[i]] <- dfnew[dfnew$es2==es2[i], ]
+  plots[[i]] <- ggplot(dfsub[[i]], aes(x = es1, y = power, group=group)) +
+          geom_point(aes(color=group,shape=group)) +
+          geom_line(aes(color=group,linetype=group)) +
+          scale_linetype_manual(values = line_types) +
+          labs(title = bquote(beta[50] == .(es2[i])),
+               x = bquote("\u03B2"[49]),
+               y = "Power",
+               color = "", shape = "", linetype = "") +
+          mytheme #+
+         #scale_y_continuous(limits = c(0, 0.6))
+         
+}
+
+fig9_panels <- ggarrange(plotlist = plots, ncol = 4, nrow = 1, labels = c("I", "J", "K", "L"))
+#fig9_panels
+```
+
+<!--## MAF=0.05, beta0=-1, other effect size=0-->
+
+```{r fig3_0_-1,echo=FALSE}
+df <- df2[df2$Beta0 == -1 & df1$es_other == 0,]
+power1 <- cbind(df[,c(3,4,6)],rep("Analytic,True",16))
+power2 <- cbind(df[,c(3,4,7)],rep("Analytic,Mis",16))
+power3 <- cbind(df[,c(3,4,8)],rep("Sim,True",16))
+power4 <- cbind(df[,c(3,4,9)],rep("Sim,Mis",16))
+
+colnames(power1)[3:4]<-c("power","group")
+colnames(power2)[3:4]<-c("power","group")
+colnames(power3)[3:4]<-c("power","group")
+colnames(power4)[3:4]<-c("power","group")
+
+dfnew<-rbind(power1,power2,power3,power4)
+dfsub<-list()
+line_types <- c("solid",  "solid",  "dashed", "dashed")
+plots <- list()
+for (i in 1:4){
+  dfsub[[i]] <- dfnew[dfnew$es2==es2[i], ]
+  plots[[i]] <- ggplot(dfsub[[i]], aes(x = es1, y = power, group=group)) +
+          geom_point(aes(color=group,shape=group)) +
+          geom_line(aes(color=group,linetype=group)) +
+          scale_linetype_manual(values = line_types) +
+          labs(title = bquote(beta[50] == .(es2[i])),
+               x = bquote("\u03B2"[49]),
+               y = "Power",
+               color = "", shape = "", linetype = "") +
+          mytheme #+
+         #scale_y_continuous(limits = c(0, 0.6))
+         
+}
+
+fig10_panels <- ggarrange(plotlist = plots, ncol = 4, nrow = 1, labels = c("A", "B", "C", "D"))
+#fig10_panels
+```
+
+<!--## MAF=0.05, beta0=0, other effect size=0-->
+
+```{r fig3_0_0,echo=FALSE}
+df <- df2[df2$Beta0 == 0 & df1$es_other == 0,]
+power1 <- cbind(df[,c(3,4,6)],rep("Analytic,True",16))
+power2 <- cbind(df[,c(3,4,7)],rep("Analytic,Mis",16))
+power3 <- cbind(df[,c(3,4,8)],rep("Sim,True",16))
+power4 <- cbind(df[,c(3,4,9)],rep("Sim,Mis",16))
+
+colnames(power1)[3:4]<-c("power","group")
+colnames(power2)[3:4]<-c("power","group")
+colnames(power3)[3:4]<-c("power","group")
+colnames(power4)[3:4]<-c("power","group")
+
+dfnew<-rbind(power1,power2,power3,power4)
+dfsub<-list()
+line_types <- c("solid",  "solid",  "dashed", "dashed")
+plots <- list()
+for (i in 1:4){
+  dfsub[[i]] <- dfnew[dfnew$es2==es2[i], ]
+  plots[[i]] <- ggplot(dfsub[[i]], aes(x = es1, y = power, group=group)) +
+          geom_point(aes(color=group,shape=group)) +
+          geom_line(aes(color=group,linetype=group)) +
+          scale_linetype_manual(values = line_types) +
+          labs(title = bquote(beta[50] == .(es2[i])),
+               x = bquote("\u03B2"[49]),
+               y = "Power",
+               color = "", shape = "", linetype = "") +
+          mytheme #+
+         #scale_y_continuous(limits = c(0, 0.6))
+         
+}
+
+fig11_panels <- ggarrange(plotlist = plots, ncol = 4, nrow = 1, labels = c("E", "F", "G", "H"))
+#fig11_panels
+```
+
+<!--## MAF=0.05, beta0=1, other effect size=0-->
+
+```{r fig3_0_1,echo=FALSE}
+df <- df2[df2$Beta0 == 1 & df2$es_other == 0,]
+power1 <- cbind(df[,c(3,4,6)],rep("Analytic,True",16))
+power2 <- cbind(df[,c(3,4,7)],rep("Analytic,Mis",16))
+power3 <- cbind(df[,c(3,4,8)],rep("Sim,True",16))
+power4 <- cbind(df[,c(3,4,9)],rep("Sim,Mis",16))
+
+colnames(power1)[3:4]<-c("power","group")
+colnames(power2)[3:4]<-c("power","group")
+colnames(power3)[3:4]<-c("power","group")
+colnames(power4)[3:4]<-c("power","group")
+
+dfnew<-rbind(power1,power2,power3,power4)
+dfsub<-list()
+line_types <- c("solid",  "solid",  "dashed", "dashed")
+plots <- list()
+for (i in 1:4){
+  dfsub[[i]] <- dfnew[dfnew$es2==es2[i], ]
+  plots[[i]] <- ggplot(dfsub[[i]], aes(x = es1, y = power, group=group)) +
+          geom_point(aes(color=group,shape=group)) +
+          geom_line(aes(color=group,linetype=group)) +
+          scale_linetype_manual(values = line_types) +
+          labs(title = bquote(beta[50] == .(es2[i])),
+               x = bquote("\u03B2"[49]),
+               y = "Power",
+               color = "", shape = "", linetype = "") +
+          mytheme #+
+         #scale_y_continuous(limits = c(0, 0.6))
+         
+}
+
+fig12_panels <- ggarrange(plotlist = plots, ncol = 4, nrow = 1, labels = c("I", "J", "K", "L"))
+#fig12_panels
+```
+
+
+<!--## MAF=0.05, beta0=-1, other effect size=0.1-->
+
+```{r fig3_-1,echo=FALSE}
+df <- df2[df2$Beta0 == -1 & df2$es_other == 0.1,]
+power1 <- cbind(df[,c(3,4,6)],rep("Analytic,True",16))
+power2 <- cbind(df[,c(3,4,7)],rep("Analytic,Mis",16))
+power3 <- cbind(df[,c(3,4,8)],rep("Sim,True",16))
+power4 <- cbind(df[,c(3,4,9)],rep("Sim,Mis",16))
+
+colnames(power1)[3:4]<-c("power","group")
+colnames(power2)[3:4]<-c("power","group")
+colnames(power3)[3:4]<-c("power","group")
+colnames(power4)[3:4]<-c("power","group")
+
+dfnew<-rbind(power1,power2,power3,power4)
+dfsub<-list()
+line_types <- c("solid",  "solid",  "dashed", "dashed")
+plots <- list()
+for (i in 1:4){
+  dfsub[[i]] <- dfnew[dfnew$es2==es2[i], ]
+  plots[[i]] <- ggplot(dfsub[[i]], aes(x = es1, y = power, group=group)) +
+          geom_point(aes(color=group,shape=group)) +
+          geom_line(aes(color=group,linetype=group)) +
+          scale_linetype_manual(values = line_types) +
+          labs(title = bquote(beta[50] == .(es2[i])),
+               x = bquote("\u03B2"[49]),
+               y = "Power",
+               color = "", shape = "", linetype = "") +
+          mytheme #+
+         #scale_y_continuous(limits = c(0, 0.6))
+         
+}
+
+fig13_panels <- ggarrange(plotlist = plots, ncol = 4, nrow = 1, labels = c("A", "B", "C", "D"))
+#fig13_panels
+```
+
+<!--## MAF=0.05, beta0=0, other effect size=0.1-->
+
+```{r fig3_0,echo=FALSE}
+df <- df2[df2$Beta0 == 0 & df2$es_other == 0.1,]
+power1 <- cbind(df[,c(3,4,6)],rep("Analytic,True",16))
+power2 <- cbind(df[,c(3,4,7)],rep("Analytic,Mis",16))
+power3 <- cbind(df[,c(3,4,8)],rep("Sim,True",16))
+power4 <- cbind(df[,c(3,4,9)],rep("Sim,Mis",16))
+
+colnames(power1)[3:4]<-c("power","group")
+colnames(power2)[3:4]<-c("power","group")
+colnames(power3)[3:4]<-c("power","group")
+colnames(power4)[3:4]<-c("power","group")
+
+dfnew<-rbind(power1,power2,power3,power4)
+dfsub<-list()
+line_types <- c("solid",  "solid",  "dashed", "dashed")
+plots <- list()
+for (i in 1:4){
+  dfsub[[i]] <- dfnew[dfnew$es2==es2[i], ]
+  plots[[i]] <- ggplot(dfsub[[i]], aes(x = es1, y = power, group=group)) +
+          geom_point(aes(color=group,shape=group)) +
+          geom_line(aes(color=group,linetype=group)) +
+          scale_linetype_manual(values = line_types) +
+          labs(title = bquote(beta[50] == .(es2[i])),
+               x = bquote("\u03B2"[49]),
+               y = "Power",
+               color = "", shape = "", linetype = "") +
+          mytheme #+
+         #scale_y_continuous(limits = c(0, 0.6))
+         
+}
+
+fig14_panels <- ggarrange(plotlist = plots, ncol = 4, nrow = 1, labels = c("E", "F", "G", "H"))
+#fig14_panels
+```
+
+<!--## MAF=0.05, beta0=1, other effect size=0.1-->
+
+```{r fig3_1,echo=FALSE}
+df <- df2[df2$Beta0 == 1 & df2$es_other == 0.1,]
+power1 <- cbind(df[,c(3,4,6)],rep("Analytic,True",16))
+power2 <- cbind(df[,c(3,4,7)],rep("Analytic,Mis",16))
+power3 <- cbind(df[,c(3,4,8)],rep("Sim,True",16))
+power4 <- cbind(df[,c(3,4,9)],rep("Sim,Mis",16))
+
+colnames(power1)[3:4]<-c("power","group")
+colnames(power2)[3:4]<-c("power","group")
+colnames(power3)[3:4]<-c("power","group")
+colnames(power4)[3:4]<-c("power","group")
+
+dfnew<-rbind(power1,power2,power3,power4)
+dfsub<-list()
+line_types <- c("solid",  "solid",  "dashed", "dashed")
+plots <- list()
+for (i in 1:4){
+  dfsub[[i]] <- dfnew[dfnew$es2==es2[i], ]
+  plots[[i]] <- ggplot(dfsub[[i]], aes(x = es1, y = power, group=group)) +
+          geom_point(aes(color=group,shape=group)) +
+          geom_line(aes(color=group,linetype=group)) +
+          scale_linetype_manual(values = line_types) +
+          labs(title = bquote(beta[50] == .(es2[i])),
+               x = bquote("\u03B2"[49]),
+               y = "Power",
+               color = "", shape = "", linetype = "") +
+          mytheme #+
+         #scale_y_continuous(limits = c(0, 0.6))
+         
+}
+
+fig15_panels <- ggarrange(plotlist = plots, ncol = 4, nrow = 1, labels = c("I", "J", "K", "L"))
+#fig15_panels
+```
+
+<!--## MAF=0.05, beta0=-1, other effect size=0.25-->
+
+```{r fig4_-1,echo=FALSE}
+df <- df2[df2$Beta0 == -1 & df2$es_other == 0.25,]
+power1 <- cbind(df[,c(3,4,6)],rep("Analytic,True",16))
+power2 <- cbind(df[,c(3,4,7)],rep("Analytic,Mis",16))
+power3 <- cbind(df[,c(3,4,8)],rep("Sim,True",16))
+power4 <- cbind(df[,c(3,4,9)],rep("Sim,Mis",16))
+
+colnames(power1)[3:4]<-c("power","group")
+colnames(power2)[3:4]<-c("power","group")
+colnames(power3)[3:4]<-c("power","group")
+colnames(power4)[3:4]<-c("power","group")
+
+dfnew<-rbind(power1,power2,power3,power4)
+dfsub<-list()
+line_types <- c("solid",  "solid",  "dashed", "dashed")
+plots <- list()
+for (i in 1:4){
+  dfsub[[i]] <- dfnew[dfnew$es2==es2[i], ]
+  plots[[i]] <- ggplot(dfsub[[i]], aes(x = es1, y = power, group=group)) +
+          geom_point(aes(color=group,shape=group)) +
+          geom_line(aes(color=group,linetype=group)) +
+          scale_linetype_manual(values = line_types) +
+          labs(title = bquote(beta[50] == .(es2[i])),
+               x = bquote("\u03B2"[49]),
+               y = "Power",
+               color = "", shape = "", linetype = "") +
+          mytheme #+
+         #scale_y_continuous(limits = c(0, 0.6))
+         
+}
+
+fig16_panels <- ggarrange(plotlist = plots, ncol = 4, nrow = 1, labels = c("A", "B", "C", "D"))
+#fig16_panels
+```
+
+<!--## MAF=0.05, beta0=0, other effect size=0.25-->
+
+```{r fig4_0,echo=FALSE}
+df <- df2[df2$Beta0 == 0 & df2$es_other == 0.25,]
+power1 <- cbind(df[,c(3,4,6)],rep("Analytic,True",16))
+power2 <- cbind(df[,c(3,4,7)],rep("Analytic,Mis",16))
+power3 <- cbind(df[,c(3,4,8)],rep("Sim,True",16))
+power4 <- cbind(df[,c(3,4,9)],rep("Sim,Mis",16))
+
+colnames(power1)[3:4]<-c("power","group")
+colnames(power2)[3:4]<-c("power","group")
+colnames(power3)[3:4]<-c("power","group")
+colnames(power4)[3:4]<-c("power","group")
+
+dfnew<-rbind(power1,power2,power3,power4)
+dfsub<-list()
+line_types <- c("solid",  "solid",  "dashed", "dashed")
+plots <- list()
+for (i in 1:4){
+  dfsub[[i]] <- dfnew[dfnew$es2==es2[i], ]
+  plots[[i]] <- ggplot(dfsub[[i]], aes(x = es1, y = power, group=group)) +
+          geom_point(aes(color=group,shape=group)) +
+          geom_line(aes(color=group,linetype=group)) +
+          scale_linetype_manual(values = line_types) +
+          labs(title = bquote(beta[50] == .(es2[i])),
+               x = bquote("\u03B2"[49]),
+               y = "Power",
+               color = "", shape = "", linetype = "") +
+          mytheme #+
+         #scale_y_continuous(limits = c(0, 0.6))
+         
+}
+
+fig17_panels <- ggarrange(plotlist = plots, ncol = 4, nrow = 1, labels = c("E", "F", "G", "H"))
+#fig17_panels
+```
+
+<!--## MAF=0.05, beta0=1, other effect size=0.25-->
+
+```{r fig4_1,echo=FALSE}
+df <- df2[df2$Beta0 == 1 & df2$es_other == 0.25,]
+power1 <- cbind(df[,c(3,4,6)],rep("Analytic,True",16))
+power2 <- cbind(df[,c(3,4,7)],rep("Analytic,Mis",16))
+power3 <- cbind(df[,c(3,4,8)],rep("Sim,True",16))
+power4 <- cbind(df[,c(3,4,9)],rep("Sim,Mis",16))
+
+colnames(power1)[3:4]<-c("power","group")
+colnames(power2)[3:4]<-c("power","group")
+colnames(power3)[3:4]<-c("power","group")
+colnames(power4)[3:4]<-c("power","group")
+
+dfnew<-rbind(power1,power2,power3,power4)
+dfsub<-list()
+line_types <- c("solid",  "solid",  "dashed", "dashed")
+plots <- list()
+for (i in 1:4){
+  dfsub[[i]] <- dfnew[dfnew$es2==es2[i], ]
+  plots[[i]] <- ggplot(dfsub[[i]], aes(x = es1, y = power, group=group)) +
+          geom_point(aes(color=group,shape=group)) +
+          geom_line(aes(color=group,linetype=group)) +
+          scale_linetype_manual(values = line_types) +
+          labs(title = bquote(beta[50] == .(es2[i])),
+               x = bquote("\u03B2"[49]),
+               y = "Power",
+               color = "", shape = "", linetype = "") +
+          mytheme #+
+         #scale_y_continuous(limits = c(0, 0.6))
+         
+}
+
+fig18_panels <- ggarrange(plotlist = plots, ncol = 4, nrow = 1, labels = c("I", "J", "K", "L"))
+#fig18_panels
+```
+
+## MAF=0.2,  other effect size=0, beta0=-1/0/1
+
+```{r combine1-binary-2k,echo=FALSE, cache=FALSE, warning=FALSE}
+# Create a dummy plot using data from any of the chunks (e.g., dfnew1)
+# to extract the legend
+dummy_plot <- ggplot(dfnew, aes(x = es1, y = power,
+                                color = group,
+                                linetype = group,
+                                shape = group)) +
+  geom_point() +
+  geom_line() +
+  scale_linetype_manual(values = c("solid", "solid", "dashed", "dashed")) +
+  theme(legend.position = "bottom") +
+  labs(color = NULL, linetype = NULL, shape = NULL) # Remove legend titles
+
+# Extract the legend
+legend <- cowplot::get_legend(dummy_plot)
+
+# --- Create Final Figure 1 (Combining original Fig 1 & 2) ---
+# Arrange the panels of fig1 and fig2 vertically
+combined_fig_1 <- ggarrange(
+  fig1_panels, fig2_panels,fig3_panels,
+  nrow = 3, ncol = 1
+  # No common legend here, add it below
+)
+
+# Add the shared legend to the bottom
+final_plot_1 <- ggarrange(
+  combined_fig_1, legend,
+  nrow = 2, ncol = 1,
+  heights = c(15, 1) # Adjust ratio for plot vs legend as needed
+)
+
+# Print the first final figure
+print(final_plot_1)
+
+
+
+```
+
+## MAF=0.2,  other effect size=0.1, beta0=-1/0/1
+
+```{r combine2-binary-2k,echo=FALSE, cache=FALSE, warning=FALSE}
+# --- Create Final Figure 2 (Combining original Fig 3 & 4) ---
+# Arrange the panels of fig3 and fig4 vertically
+combined_fig_2 <- ggarrange(
+  fig4_panels, fig5_panels,fig6_panels,
+  nrow = 3, ncol = 1
+  # No common legend here, add it below
+)
+
+# Add the shared legend to the bottom
+final_plot_2 <- ggarrange(
+  combined_fig_2, legend,
+  nrow = 2, ncol = 1,
+  heights = c(10, 1) # Adjust ratio for plot vs legend as needed
+)
+
+# Print the second final figure
+print(final_plot_2)
+
+
+```
+
+## MAF=0.2,  other effect size=0.25, beta0=-1/0/1
+
+```{r combine3-binary-2k,echo=FALSE, cache=FALSE, warning=FALSE}
+combined_fig_3 <- ggarrange(
+  fig7_panels, fig8_panels,fig9_panels,
+  nrow = 3, ncol = 1
+  # No common legend here, add it below
+)
+
+# Add the shared legend to the bottom
+final_plot_3 <- ggarrange(
+  combined_fig_3, legend,
+  nrow = 2, ncol = 1,
+  heights = c(10, 1) # Adjust ratio for plot vs legend as needed
+)
+
+# Print the second final figure
+print(final_plot_3)
+
+```
+
+## MAF=0.05,  other effect size=0, beta0=-1/0/1
+
+```{r combine4-binary-2k,echo=FALSE, cache=FALSE, warning=FALSE}
+
+combined_fig_4 <- ggarrange(
+  fig10_panels, fig11_panels,fig12_panels,
+  nrow = 3, ncol = 1
+  # No common legend here, add it below
+)
+
+# Add the shared legend to the bottom
+final_plot_4 <- ggarrange(
+  combined_fig_4, legend,
+  nrow = 2, ncol = 1,
+  heights = c(10, 1) # Adjust ratio for plot vs legend as needed
+)
+
+# Print the second final figure
+print(final_plot_4)
+
+
+```
+
+## MAF=0.05,  other effect size=0.1, beta0=-1/0/1
+
+```{r combine5-binary-2k,echo=FALSE, cache=FALSE, warning=FALSE}
+
+
+combined_fig_5 <- ggarrange(
+  fig13_panels, fig14_panels,fig15_panels,
+  nrow = 3, ncol = 1
+  # No common legend here, add it below
+)
+
+# Add the shared legend to the bottom
+final_plot_5 <- ggarrange(
+  combined_fig_5, legend,
+  nrow = 2, ncol = 1,
+  heights = c(10, 1) # Adjust ratio for plot vs legend as needed
+)
+
+# Print the second final figure
+print(final_plot_5)
+
+
+
+
+```
+
+## MAF=0.05,  other effect size=0.25, beta0=-1/0/1
+
+```{r combine6-binary-2k,echo=FALSE, cache=FALSE, warning=FALSE}
+
+
+combined_fig_6 <- ggarrange(
+  fig16_panels, fig17_panels,fig18_panels,
+  nrow = 3, ncol = 1
+  # No common legend here, add it below
+)
+
+# Add the shared legend to the bottom
+final_plot_6 <- ggarrange(
+  combined_fig_6, legend,
+  nrow = 2, ncol = 1,
+  heights = c(10, 1) # Adjust ratio for plot vs legend as needed
+)
+
+# Print the second final figure
+print(final_plot_6)
+```
+
