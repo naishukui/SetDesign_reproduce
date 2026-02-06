@@ -14,9 +14,9 @@ echo "${LSB_JOBINDEX}"
 echo $HOSTNAME
 module load saige
 
-j=$LSB_JOBINDEX
+
 # 1. Get the Job Folder Index (1 to 144) from LSF
-#i=$LSB_JOBINDEX
+j=$LSB_JOBINDEX
 
 echo "Starting processing for Job Folder: job${j}"
 
